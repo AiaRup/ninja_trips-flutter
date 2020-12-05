@@ -7,6 +7,7 @@ class Heart extends StatefulWidget {
 
 class _HeartState extends State<Heart> with SingleTickerProviderStateMixin {
   AnimationController _controller;
+  Animation<Color> _colorAnimation;
 
   @override
   void initState() {
@@ -17,20 +18,30 @@ class _HeartState extends State<Heart> with SingleTickerProviderStateMixin {
       vsync: this,
     );
 
+    _colorAnimation = ColorTween(begin: Colors.grey[400], end: Colors.red).animate(_controller);
+
+    _controller.forward();
+
     _controller.addListener(() {
       print(_controller.value);
+      print(_colorAnimation.value);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        Icons.favorite,
-        color: Colors.grey[400],
-        size: 30,
-      ),
-      onPressed: () {},
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (BuildContext context, _) {
+        return IconButton(
+          icon: Icon(
+            Icons.favorite,
+            color: _colorAnimation.value,
+            size: 30,
+          ),
+          onPressed: () {},
+        );
+      },
     );
   }
 }
