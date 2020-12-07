@@ -10,6 +10,7 @@ class TripList extends StatefulWidget {
 class _TripListState extends State<TripList> {
   List<Widget> _tripTiles = [];
   GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  Future ft = Future(() {});
 
   @override
   void initState() {
@@ -29,8 +30,12 @@ class _TripListState extends State<TripList> {
     ];
 
     _trips.forEach((Trip trip) {
-      _tripTiles.add(_buildTile(trip));
-      _listKey.currentState.insertItem(_tripTiles.length - 1);
+      ft = ft.then((data) {
+        return Future.delayed(const Duration(milliseconds: 100), () {
+          _tripTiles.add(_buildTile(trip));
+          _listKey.currentState.insertItem(_tripTiles.length - 1);
+        });
+      });
     });
   }
 
