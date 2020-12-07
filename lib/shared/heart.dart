@@ -6,6 +6,7 @@ class Heart extends StatefulWidget {
 }
 
 class _HeartState extends State<Heart> with SingleTickerProviderStateMixin {
+  bool isFav = false;
   AnimationController _controller;
   Animation<Color> _colorAnimation;
 
@@ -20,12 +21,30 @@ class _HeartState extends State<Heart> with SingleTickerProviderStateMixin {
 
     _colorAnimation = ColorTween(begin: Colors.grey[400], end: Colors.red).animate(_controller);
 
-    _controller.forward();
-
     _controller.addListener(() {
-      print(_controller.value);
-      print(_colorAnimation.value);
+      // print(_controller.value);
+      // print(_colorAnimation.value);
     });
+
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() {
+          isFav = true;
+        });
+      }
+      if (status == AnimationStatus.dismissed) {
+        setState(() {
+          isFav = false;
+        });
+      }
+    });
+  }
+
+  // dismiss the animation when widgit exits screen
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 
   @override
@@ -39,7 +58,9 @@ class _HeartState extends State<Heart> with SingleTickerProviderStateMixin {
             color: _colorAnimation.value,
             size: 30,
           ),
-          onPressed: () {},
+          onPressed: () {
+            isFav ? _controller.reverse() : _controller.forward();
+          },
         );
       },
     );
